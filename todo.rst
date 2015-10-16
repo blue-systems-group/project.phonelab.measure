@@ -1,0 +1,3 @@
+- logcat
+- LTE signal strength
+- Location

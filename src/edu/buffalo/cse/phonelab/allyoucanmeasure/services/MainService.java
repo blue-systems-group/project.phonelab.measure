@@ -3,10 +3,15 @@ package edu.buffalo.cse.phonelab.allyoucanmeasure.services;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
+
+import edu.buffalo.cse.phonelab.allyoucanmeasure.utils.LocalUtils;
 
 
 
 public class MainService extends Service {
+
+    private final String TAG = LocalUtils.getTag(this.getClass());
 
 
 
@@ -18,8 +23,9 @@ public class MainService extends Service {
 
     @Override
     public void onCreate() {
-        // TODO Auto-generated method stub
         super.onCreate();
+
+        Log.d(TAG, "========= Creating " + this.getClass().getSimpleName() + " ============");
     }
 
     @Override
