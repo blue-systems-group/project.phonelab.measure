@@ -26,15 +26,11 @@ public class LocationReceiver extends Receiver
 
     private GoogleApiClient mGoogleApiClient;
 
-
-    private static final int REQUEST_RESOLVE_ERROR = 1001;
-
     public LocationReceiver(Context context) {
         super(context);
 
         setMaxUpdateIntervalSec(10);
 
-        Log.d(TAG, "Connecting to Google API");
         mGoogleApiClient = new GoogleApiClient.Builder(mContext)
             .addApi(LocationServices.API)
             .addConnectionCallbacks(this)
@@ -88,6 +84,7 @@ public class LocationReceiver extends Receiver
     @Override
     public void start() {
         if (!mStarted) {
+            Log.d(TAG, "Connecting to Google API");
             mGoogleApiClient.connect();
         }
         mStarted = true;
