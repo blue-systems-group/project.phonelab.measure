@@ -1,5 +1,9 @@
 package edu.buffalo.cse.phonelab.allyoucanmeasure.utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -70,5 +74,10 @@ public class LocalUtils {
         }
 
         return json;
+    }
+
+    public static String getDateTimeString(long ms) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US);
+        return sdf.format(new Date(ms));
     }
 }

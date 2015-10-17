@@ -1,5 +1,6 @@
 package edu.buffalo.cse.phonelab.allyoucanmeasure.services;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -26,6 +27,8 @@ public class MainService extends Service {
         "WifiReceiver",
     };
 
+    private Process mLogcatProcess;
+
     private Map<String, Receiver> mReceivers;
     private Context mContext;
     private boolean mStarted;
@@ -36,6 +39,12 @@ public class MainService extends Service {
     public IBinder onBind(Intent intent) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    private String getLogcatFilePath() {
+        File dir = mContext.getDir("logcat", Context.MODE_PRIVATE);
+        return dir.getAbsolutePath() + File.separator + "logcat-" +
+            LocalUtils.getDateTimeString(System.currentTimeMillis()) + ".log";
     }
 
     @Override
@@ -57,6 +66,18 @@ public class MainService extends Service {
                 Log.e(TAG, "Failed to create " + name, e);
             }
         }
+
+        String cmd = "logcat -v threadtime -f " + getLogcatFilePath() + " -r 1024 -n 4096";
+        Log.d(TAG, "Starting Logcat: " + cmd);
+        try {
+            mLogcatProcess = (new ProcessBuilder())
+                .command(cmd.split("\\s+"))
+                .redirectErrorStream(true)
+                .start();
+        }
+        catch (Exception e) {
+            Log.e(TAG, "Failed to start Logcat process.", e);
+        }
     }
 
     @Override
@@ -76,11 +97,12 @@ public class MainService extends Service {
         }
 
         mStarted = false;
+
+        mLogcatProcess.destroy();
     }
 
     @Override
     public void onLowMemory() {
-        // TODO Auto-generated method stub
         super.onLowMemory();
     }
 
