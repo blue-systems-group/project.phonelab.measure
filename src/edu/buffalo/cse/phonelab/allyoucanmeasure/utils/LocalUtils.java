@@ -1,5 +1,6 @@
 package edu.buffalo.cse.phonelab.allyoucanmeasure.utils;
 
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -13,6 +14,12 @@ import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.provider.Settings;
+import android.telephony.CellIdentityLte;
+import android.telephony.CellInfoCdma;
+import android.telephony.CellInfoGsm;
+import android.telephony.CellInfoLte;
+import android.telephony.CellInfoWcdma;
+import android.telephony.CellSignalStrengthLte;
 
 public class LocalUtils {
 
@@ -71,6 +78,46 @@ public class LocalUtils {
             json.put("ipAddr", info.getIpAddress());
             json.put("macAddr", info.getMacAddress());
             json.put("RSSI", info.getRssi());
+        }
+        else if (o instanceof CellInfoLte) {
+            CellInfoLte lte = (CellInfoLte) o;
+            json.put("type", "lte");
+            json.put("cellIdentity", toJSONObject(lte.getCellIdentity()));
+            json.put("cellSignalStrength", toJSONObject(lte.getCellSignalStrength()));
+        }
+        else if (o instanceof CellIdentityLte) {
+            CellIdentityLte identity = (CellIdentityLte) o;
+            json.put("ci", identity.getCi());
+            json.put("mcc", identity.getMcc());
+            json.put("mnc", identity.getMnc());
+            json.put("pci", identity.getPci());
+            json.put("tac", identity.getTac());
+        }
+        else if (o instanceof CellSignalStrengthLte) {
+            CellSignalStrengthLte signal = (CellSignalStrengthLte) o;
+            json.put("asu", signal.getAsuLevel());
+            json.put("dbm", signal.getDbm());
+            json.put("level", signal.getLevel());
+            String[] fields = {"mRsrp", "mRsrq", "mRssnr", "mCqi", "mTimingAdvance"};
+            for (String name : fields) {
+                try {
+                    Field f = signal.getClass().getDeclaredField(name);
+                    f.setAccessible(true);
+                    json.put(name, (Integer)f.get(signal));
+                }
+                catch (Exception e) {
+                    json.put(name, -1);
+                }
+            }
+        }
+        else if (o instanceof CellInfoCdma) {
+            json.put("type", "cmda");
+        }
+        else if (o instanceof CellInfoGsm) {
+            json.put("type", "gsm");
+        }
+        else if (o instanceof CellInfoWcdma) {
+            json.put("type", "wcdma");
         }
 
         return json;

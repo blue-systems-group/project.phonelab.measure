@@ -25,6 +25,7 @@ public class MainService extends Service {
 
     private String[] RECEIVER_CLASS_NAMES = {
         "WifiReceiver",
+        "CellularReceiver",
     };
 
     private Process mLogcatProcess;

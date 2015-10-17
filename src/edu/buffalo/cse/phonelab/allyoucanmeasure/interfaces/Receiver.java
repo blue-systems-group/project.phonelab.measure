@@ -38,7 +38,12 @@ public abstract class Receiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "Intent fired, action is " + intent.getAction());
-            triggerUpdate();
+            try {
+                triggerUpdate();
+            }
+            catch (Exception e) {
+                Log.e(TAG, "Failed to trigger update.", e);
+            }
             if (mStarted) {
                 mAlarmManager.setExact(
                         AlarmManager.ELAPSED_REALTIME_WAKEUP,
@@ -74,7 +79,7 @@ public abstract class Receiver extends BroadcastReceiver {
 
     public abstract void doReceive(Intent intent) throws Exception;
     public abstract List<String> getInterestedIntents();
-    public abstract void triggerUpdate();
+    public abstract void triggerUpdate() throws Exception;
 
     @Override
     public void onReceive(Context context, Intent intent) {
