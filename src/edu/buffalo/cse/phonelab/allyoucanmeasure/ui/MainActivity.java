@@ -1,6 +1,7 @@
 package edu.buffalo.cse.phonelab.allyoucanmeasure.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,7 @@ import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.location.LocationServices;
 
+import edu.buffalo.cse.phonelab.allyoucanmeasure.services.MainService;
 import edu.buffalo.cse.phonelab.allyoucanmeasure.utils.LocalUtils;
 
 public class MainActivity extends Activity
@@ -56,6 +58,7 @@ public class MainActivity extends Activity
     @Override
     public void onConnected(Bundle connectionHint) {
         Log.d(TAG, "Connected to Google API.");
+        startService(new Intent(this, MainService.class));
     }
 
     @Override

@@ -26,7 +26,6 @@ public class LocationReceiver extends Receiver
 
     private GoogleApiClient mGoogleApiClient;
 
-    private boolean mConnected = false;
 
     private static final int REQUEST_RESOLVE_ERROR = 1001;
 
@@ -41,16 +40,12 @@ public class LocationReceiver extends Receiver
             .addConnectionCallbacks(this)
             .addOnConnectionFailedListener(this)
             .build();
-        mGoogleApiClient.connect();
     }
 
     @Override
     public void onConnected(Bundle arg0) {
         Log.d(TAG, "Connected to Google API.");
-        if (mStarted) {
-            requestLocationUpdate();
-        }
-        mConnected = true;
+        requestLocationUpdate();
     }
 
     @Override
@@ -92,8 +87,8 @@ public class LocationReceiver extends Receiver
 
     @Override
     public void start() {
-        if (mConnected) {
-            requestLocationUpdate();
+        if (!mStarted) {
+            mGoogleApiClient.connect();
         }
         mStarted = true;
     }
@@ -102,5 +97,6 @@ public class LocationReceiver extends Receiver
     public void stop() {
         stopLocationUpdate();
         mStarted = false;
+        mGoogleApiClient.disconnect();
     }
 }
