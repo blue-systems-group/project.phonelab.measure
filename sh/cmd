@@ -17,5 +17,6 @@ else
 fi
 
 case $COMMAND in
-    start)      adb $DEVICE shell am startservice --user 0 edu.buffalo.cse.phonelab.allyoucanmeasure/.services.MainService ;;
+    activity)     adb $DEVICE shell am start -n edu.buffalo.cse.phonelab.allyoucanmeasure/.ui.MainActivity ;;
+    service)      adb $DEVICE shell am startservice --user 0 edu.buffalo.cse.phonelab.allyoucanmeasure/.services.MainService ;;
 esac

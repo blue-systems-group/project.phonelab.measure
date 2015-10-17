@@ -1,5 +1,6 @@
 package edu.buffalo.cse.phonelab.allyoucanmeasure.interfaces;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
@@ -27,7 +28,7 @@ public abstract class Receiver extends BroadcastReceiver {
     public static final String KEY_UPTIME = "uptime";
 
     private long mMaxUpdateIntervalSec;
-    private boolean mStarted;
+    protected boolean mStarted;
 
     private AlarmManager mAlarmManager;
 
@@ -77,9 +78,18 @@ public abstract class Receiver extends BroadcastReceiver {
         return mLastUpdated;
     }
 
-    public abstract void doReceive(Intent intent) throws Exception;
-    public abstract List<String> getInterestedIntents();
-    public abstract void triggerUpdate() throws Exception;
+    public void triggerUpdate() throws Exception {
+        // pass
+    }
+
+
+    public List<String> getInterestedIntents() {
+        return new ArrayList<String>();
+    }
+
+    public void doReceive(Intent intent) throws Exception {
+        // pass
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {

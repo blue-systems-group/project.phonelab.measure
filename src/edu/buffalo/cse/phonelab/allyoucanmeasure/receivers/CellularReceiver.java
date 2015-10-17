@@ -33,11 +33,6 @@ public class CellularReceiver extends Receiver {
     public void doReceive(Intent intent) throws Exception {
     }
 
-    @Override
-    public List<String> getInterestedIntents() {
-        return new ArrayList<String>();
-    }
-
     private void logCellInfo() throws JSONException {
         JSONObject json = new JSONObject();
         JSONArray array = new JSONArray();

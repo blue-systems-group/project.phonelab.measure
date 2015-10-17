@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
@@ -119,6 +120,18 @@ public class LocalUtils {
         else if (o instanceof CellInfoWcdma) {
             json.put("type", "wcdma");
         }
+        else if (o instanceof Location) {
+            Location l = (Location) o;
+            json.put("accuracy", l.getAccuracy());
+            json.put("altitude", l.getAltitude());
+            json.put("bearing", l.getBearing());
+            json.put("elapsedRealtimeNanos", l.getElapsedRealtimeNanos());
+            json.put("latitude", l.getLatitude());
+            json.put("longitude", l.getLongitude());
+            json.put("provider", l.getProvider());
+            json.put("speed", l.getSpeed());
+        }
+
 
         return json;
     }
