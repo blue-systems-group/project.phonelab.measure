@@ -1,3 +1,2 @@
-- logcat
-- LTE signal strength
-- Location
+- Activity
+- UI.
