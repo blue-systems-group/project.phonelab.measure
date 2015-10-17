@@ -1,10 +1,16 @@
 package edu.buffalo.cse.phonelab.allyoucanmeasure.services;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+import edu.buffalo.cse.phonelab.allyoucanmeasure.interfaces.Receiver;
 import edu.buffalo.cse.phonelab.allyoucanmeasure.utils.LocalUtils;
 
 
@@ -12,6 +18,17 @@ import edu.buffalo.cse.phonelab.allyoucanmeasure.utils.LocalUtils;
 public class MainService extends Service {
 
     private final String TAG = LocalUtils.getTag(this.getClass());
+
+    private static final String RECEIVER_PACKAGE_NAME =
+        "edu.buffalo.cse.phonelab.allyoucanmeasure.receivers";
+
+    private String[] RECEIVER_CLASS_NAMES = {
+        "WifiReceiver",
+    };
+
+    private Map<String, Receiver> mReceivers;
+    private Context mContext;
+    private boolean mStarted;
 
 
 
@@ -25,13 +42,40 @@ public class MainService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        Log.d(TAG, "========= Creating " + this.getClass().getSimpleName() + " ============");
+        mContext = this;
+
+        Log.d(TAG, "Creating " + this.getClass().getSimpleName());
+        mReceivers = new HashMap<String, Receiver>();
+        for (String name : RECEIVER_CLASS_NAMES) {
+            try {
+                mReceivers.put(name, (Receiver) Class.forName(
+                            RECEIVER_PACKAGE_NAME + "." + name)
+                        .getConstructor(Context.class).newInstance(mContext));
+                Log.d(TAG, "Created " + name);
+            }
+            catch (Exception e) {
+                Log.e(TAG, "Failed to create " + name, e);
+            }
+        }
     }
 
     @Override
     public void onDestroy() {
-        // TODO Auto-generated method stub
         super.onDestroy();
+
+        if (!mStarted) {
+            return;
+        }
+
+        Log.d(TAG, "Destroying " + this.getClass().getSimpleName());
+        for (Entry<String, Receiver> entry : mReceivers.entrySet()) {
+            String name = entry.getKey();
+            Receiver receiver = entry.getValue();
+            Log.d(TAG, "Stopping " + name);
+            receiver.stop();
+        }
+
+        mStarted = false;
     }
 
     @Override
@@ -41,15 +85,19 @@ public class MainService extends Service {
     }
 
     @Override
-    public void onStart(Intent intent, int startId) {
-        // TODO Auto-generated method stub
-        super.onStart(intent, startId);
-    }
-
-    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // TODO Auto-generated method stub
-        return super.onStartCommand(intent, flags, startId);
+        if (mStarted) {
+            Log.d(TAG, "Not restarting " + this.getClass().getSimpleName());
+        }
+        for (Entry<String, Receiver> entry : mReceivers.entrySet()) {
+            String name = entry.getKey();
+            Receiver receiver = entry.getValue();
+            Log.d(TAG, "Starting " + name);
+            receiver.start();
+        }
+
+        mStarted = true;
+        return START_STICKY;
     }
 
     @Override

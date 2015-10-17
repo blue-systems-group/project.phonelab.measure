@@ -28,6 +28,7 @@ public class WifiReceiver extends Receiver {
         super(context);
 
         mWifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+        setMaxUpdateIntervalSec(5);
     }
 
     @Override
@@ -97,5 +98,9 @@ public class WifiReceiver extends Receiver {
             logNetworkState(intent, json);
         }
         log(json);
+    }
+
+    public void triggerUpdate() {
+        mWifiManager.startScan();
     }
 }

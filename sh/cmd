@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+if [ "$1" == "devices" ]; then
+    adb devices
+    exit 0
+fi
+
+if [ $# -eq 1 ]; then
+    DEVICE=
+    COMMAND=$1
+elif [ $# -eq 3 ]; then
+    DEVICE="-s $2"
+    COMMAND=$3
+else
+    echo "Usage: $0 [-s device] command"
+    exit 0
+fi
+
+case $COMMAND in
+    start)      adb $DEVICE shell am startservice --user 0 edu.buffalo.cse.phonelab.allyoucanmeasure/.services.MainService ;;
+esac

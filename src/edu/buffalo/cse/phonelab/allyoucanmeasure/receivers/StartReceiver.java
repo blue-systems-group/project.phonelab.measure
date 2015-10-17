@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import edu.buffalo.cse.phonelab.allyoucanmeasure.services.MainService;
+import edu.buffalo.cse.phonelab.allyoucanmeasure.utils.LocalUtils;
 
 public class StartReceiver extends BroadcastReceiver {
     private static final String TAG = LocalUtils.getTag(StartReceiver.class);

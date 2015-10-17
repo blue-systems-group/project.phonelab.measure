@@ -18,7 +18,7 @@ public class LocalUtils {
 
     /** Generate log tag for class.  */
     public static String getTag(Class<?> c) {
-        return "WiseFi-" + c.getSimpleName();
+        return "AllYouCanMeasure-" + c.getSimpleName();
     }
 
     public static int randInt(int min, int max) {
