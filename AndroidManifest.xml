@@ -22,6 +22,7 @@
   <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+  <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION"/>
 
   <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
     <activity android:name=".ui.MainActivity"
@@ -37,6 +38,12 @@
     <service android:name=".services.MainService" android:exported="true">
       <intent-filter>
         <action android:name="edu.buffalo.cse.phonelab.allyoucanmeasure.services.MainService" />
+      </intent-filter>
+    </service>
+
+    <service android:name=".receivers.ActivityReceiver.ActivityIntentService" android:exported="true">
+      <intent-filter>
+        <action android:name="edu.buffalo.cse.phonelab.allyoucanmeasure.receivers.ActivityReceiver.ActivityIntentService" />
       </intent-filter>
     </service>
 

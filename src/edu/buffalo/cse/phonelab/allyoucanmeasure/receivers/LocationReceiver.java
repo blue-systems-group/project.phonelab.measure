@@ -19,8 +19,7 @@ import edu.buffalo.cse.phonelab.allyoucanmeasure.interfaces.Receiver;
 import edu.buffalo.cse.phonelab.allyoucanmeasure.utils.LocalUtils;
 
 public class LocationReceiver extends Receiver
-    implements ConnectionCallbacks, OnConnectionFailedListener, LocationListener
-           {
+    implements ConnectionCallbacks, OnConnectionFailedListener, LocationListener {
 
     private final String ACTION_LOCATION_UPDATED = this.getClass().getName() + ".LocationUpdated";
 

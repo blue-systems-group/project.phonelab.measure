@@ -27,6 +27,7 @@ public class MainService extends Service {
         "WifiReceiver",
         "CellularReceiver",
         "LocationReceiver",
+        "ActivityReceiver",
     };
 
     private Process mLogcatProcess;

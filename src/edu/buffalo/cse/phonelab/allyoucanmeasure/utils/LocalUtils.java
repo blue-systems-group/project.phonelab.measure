@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,6 +22,9 @@ import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoLte;
 import android.telephony.CellInfoWcdma;
 import android.telephony.CellSignalStrengthLte;
+
+import com.google.android.gms.location.ActivityRecognitionResult;
+import com.google.android.gms.location.DetectedActivity;
 
 public class LocalUtils {
 
@@ -131,8 +135,45 @@ public class LocalUtils {
             json.put("provider", l.getProvider());
             json.put("speed", l.getSpeed());
         }
-
-
+        else if (o instanceof ActivityRecognitionResult) {
+            ActivityRecognitionResult result = (ActivityRecognitionResult) o;
+            json.put("mostProbable", toJSONObject(result.getMostProbableActivity()));
+            JSONArray array = new JSONArray();
+            for (DetectedActivity a : result.getProbableActivities()) {
+                array.put(toJSONObject(a));
+            }
+            json.put("probableActivities", array);
+        }
+        else if (o instanceof DetectedActivity) {
+            DetectedActivity a = (DetectedActivity) o;
+            switch (a.getType()) {
+                case DetectedActivity.IN_VEHICLE:
+                    json.put("type", "IN_VEHICLE");
+                    break;
+                case DetectedActivity.ON_BICYCLE:
+                    json.put("type", "ON_BICYCLE");
+                    break;
+                case DetectedActivity.ON_FOOT:
+                    json.put("type", "ON_FOOT");
+                    break;
+                case DetectedActivity.RUNNING:
+                    json.put("type", "RUNNING");
+                    break;
+                case DetectedActivity.STILL:
+                    json.put("type", "STILL");
+                    break;
+                case DetectedActivity.TILTING:
+                    json.put("type", "TILTING");
+                    break;
+                case DetectedActivity.UNKNOWN:
+                    json.put("type", "UNKNOWN");
+                    break;
+                case DetectedActivity.WALKING:
+                    json.put("type", "WALKING");
+                    break;
+            }
+            json.put("confidence", a.getConfidence());
+        }
         return json;
     }
 
