@@ -12,12 +12,21 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.ActivityRecognition;
+import com.google.android.gms.location.LocationServices;
+
 import edu.buffalo.cse.phonelab.allyoucanmeasure.utils.LocalUtils;
 
-public abstract class Receiver extends BroadcastReceiver {
+public abstract class Receiver extends BroadcastReceiver
+    implements ConnectionCallbacks, OnConnectionFailedListener {
 
     protected Context mContext;
     protected final String TAG = LocalUtils.getTag(this.getClass());
@@ -31,6 +40,8 @@ public abstract class Receiver extends BroadcastReceiver {
     protected boolean mStarted;
 
     private AlarmManager mAlarmManager;
+
+    protected GoogleApiClient mGoogleApiClient;
 
     private final String ALARM_INTENT_NAME = this.getClass().getName() + ".Alarm";
     private PendingIntent mAlarmPendingIntent;
@@ -67,6 +78,14 @@ public abstract class Receiver extends BroadcastReceiver {
             intentFilter.addAction(name);
         }
         mContext.registerReceiver(this, intentFilter);
+
+        mGoogleApiClient = new GoogleApiClient.Builder(mContext)
+            .addApi(ActivityRecognition.API)
+            .addApi(LocationServices.API)
+            .addConnectionCallbacks(this)
+            .addOnConnectionFailedListener(this)
+            .build();
+
 
         mMaxUpdateIntervalSec = 60L;
         mAlarmPendingIntent = PendingIntent.getBroadcast(mContext, 0,
@@ -129,6 +148,12 @@ public abstract class Receiver extends BroadcastReceiver {
     }
 
     public void start() {
+        if (mStarted) {
+            Log.d(TAG, "Not restarting " + this.getClass().getSimpleName());
+        }
+        Log.d(TAG, "Connecting to Google API.");
+        mGoogleApiClient.connect();
+
         Log.d(TAG, "Start repeating every " + mMaxUpdateIntervalSec + " seconds.");
         mAlarmManager.setExact(
                 AlarmManager.ELAPSED_REALTIME_WAKEUP,
@@ -140,6 +165,25 @@ public abstract class Receiver extends BroadcastReceiver {
     public void stop() {
         Log.d(TAG, "Stop repeating.");
         mAlarmManager.cancel(mAlarmPendingIntent);
+
+        Log.d(TAG, "Disconnecting from Google API.");
+        mGoogleApiClient.disconnect();
         mStarted = false;
     }
+
+    @Override
+    public void onConnected(Bundle arg0) {
+        Log.d(TAG, "Connected to Google API.");
+    }
+
+    @Override
+    public void onConnectionSuspended(int arg1) {
+        Log.e(TAG, "Google API connection suspended.");
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        Log.e(TAG, "Google API connection failed: " + result.getErrorMessage());
+    }
+
 }

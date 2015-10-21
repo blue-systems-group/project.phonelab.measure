@@ -41,9 +41,9 @@
       </intent-filter>
     </service>
 
-    <service android:name=".receivers.ActivityReceiver.ActivityIntentService" android:exported="true">
+    <service android:name=".services.ActivityIntentService">
       <intent-filter>
-        <action android:name="edu.buffalo.cse.phonelab.allyoucanmeasure.receivers.ActivityReceiver.ActivityIntentService" />
+        <action android:name="edu.buffalo.cse.phonelab.allyoucanmeasure.services.ActivityIntentService" />
       </intent-filter>
     </service>
 

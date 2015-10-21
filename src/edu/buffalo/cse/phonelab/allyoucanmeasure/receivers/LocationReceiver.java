@@ -23,18 +23,10 @@ public class LocationReceiver extends Receiver
 
     private final String ACTION_LOCATION_UPDATED = this.getClass().getName() + ".LocationUpdated";
 
-    private GoogleApiClient mGoogleApiClient;
-
     public LocationReceiver(Context context) {
         super(context);
 
         setMaxUpdateIntervalSec(10);
-
-        mGoogleApiClient = new GoogleApiClient.Builder(mContext)
-            .addApi(LocationServices.API)
-            .addConnectionCallbacks(this)
-            .addOnConnectionFailedListener(this)
-            .build();
     }
 
     @Override
@@ -67,6 +59,7 @@ public class LocationReceiver extends Receiver
     }
 
     private void requestLocationUpdate() {
+        Log.d(TAG, "Requesting location update every " + getMaxUpdateIntervalSec() + " secs.");
         LocationRequest request = new LocationRequest();
         request.setInterval(getMaxUpdateIntervalSec()*1000);
         request.setFastestInterval(0);
@@ -81,18 +74,8 @@ public class LocationReceiver extends Receiver
     }
 
     @Override
-    public void start() {
-        if (!mStarted) {
-            Log.d(TAG, "Connecting to Google API");
-            mGoogleApiClient.connect();
-        }
-        mStarted = true;
-    }
-
-    @Override
     public void stop() {
         stopLocationUpdate();
-        mStarted = false;
-        mGoogleApiClient.disconnect();
+        super.stop();
     }
 }
