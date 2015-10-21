@@ -5,10 +5,9 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.location.LocationListener;
@@ -31,18 +30,8 @@ public class LocationReceiver extends Receiver
 
     @Override
     public void onConnected(Bundle arg0) {
-        Log.d(TAG, "Connected to Google API.");
+        super.onConnected(arg0);
         requestLocationUpdate();
-    }
-
-    @Override
-    public void onConnectionSuspended(int arg1) {
-        Log.e(TAG, "Google API connection suspended.");
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult result) {
-        Log.e(TAG, "Google API connection failed: " + result.getErrorMessage());
     }
 
     @Override
@@ -52,6 +41,7 @@ public class LocationReceiver extends Receiver
             json.put(KEY_ACTION, ACTION_LOCATION_UPDATED);
             json.put("location", LocalUtils.toJSONObject(location));
             log(json);
+            mLastUpdated = SystemClock.elapsedRealtimeNanos();
         }
         catch (Exception e) {
             Log.e(TAG, "Failed to log location.", e);
@@ -77,5 +67,10 @@ public class LocationReceiver extends Receiver
     public void stop() {
         stopLocationUpdate();
         super.stop();
+    }
+
+    @Override
+    public void triggerUpdate() throws Exception {
+        requestLocationUpdate();
     }
 }

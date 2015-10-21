@@ -50,7 +50,9 @@ public abstract class Receiver extends BroadcastReceiver
         @Override
         public void onReceive(Context context, Intent intent) {
             try {
-                triggerUpdate();
+                if (elapseNanosSinceLastUpdate() > getMaxUpdateIntervalSec()*1e9) {
+                    triggerUpdate();
+                }
             }
             catch (Exception e) {
                 Log.e(TAG, "Failed to trigger update.", e);
@@ -98,6 +100,10 @@ public abstract class Receiver extends BroadcastReceiver
 
     public void triggerUpdate() throws Exception {
         // pass
+    }
+
+    public long elapseNanosSinceLastUpdate() {
+        return SystemClock.elapsedRealtimeNanos() - mLastUpdated;
     }
 
 
