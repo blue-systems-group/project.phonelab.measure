@@ -45,9 +45,10 @@ public class MainService extends Service {
     }
 
     private String getLogcatFilePath() {
-        File dir = mContext.getDir("logcat", Context.MODE_PRIVATE);
-        return dir.getAbsolutePath() + File.separator + "logcat-" +
-            LocalUtils.getDateTimeString(System.currentTimeMillis()) + ".log";
+        File dir = new File("/sdcard/AllYouCanMeasure/");
+        dir.mkdirs();
+        return (new File(dir, "logcat-" + LocalUtils.getDateTimeString(
+                        System.currentTimeMillis()) + ".log")).getAbsolutePath();
     }
 
     @Override

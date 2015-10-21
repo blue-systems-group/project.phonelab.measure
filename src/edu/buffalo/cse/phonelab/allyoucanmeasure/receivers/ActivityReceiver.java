@@ -74,9 +74,4 @@ public class ActivityReceiver extends Receiver {
         actions.add(ActivityIntentService.ACTION_ACTIVITY_UPDATED);
         return actions;
     }
-
-    @Override
-    public void triggerUpdate() throws Exception {
-        requestActivityUpdate();
-    }
 }

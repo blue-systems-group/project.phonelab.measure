@@ -68,9 +68,4 @@ public class LocationReceiver extends Receiver
         stopLocationUpdate();
         super.stop();
     }
-
-    @Override
-    public void triggerUpdate() throws Exception {
-        requestLocationUpdate();
-    }
 }
