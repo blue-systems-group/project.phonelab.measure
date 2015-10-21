@@ -70,17 +70,6 @@ public class MainService extends Service {
             }
         }
 
-        String cmd = "logcat -v threadtime -f " + getLogcatFilePath() + " -r 1024 -n 4096";
-        Log.d(TAG, "Starting Logcat: " + cmd);
-        try {
-            mLogcatProcess = (new ProcessBuilder())
-                .command(cmd.split("\\s+"))
-                .redirectErrorStream(true)
-                .start();
-        }
-        catch (Exception e) {
-            Log.e(TAG, "Failed to start Logcat process.", e);
-        }
     }
 
     @Override
@@ -120,6 +109,19 @@ public class MainService extends Service {
             Log.d(TAG, "Starting " + name);
             receiver.start();
         }
+
+        String cmd = "logcat -v threadtime -f " + getLogcatFilePath() + " -r 1024 -n 4096";
+        Log.d(TAG, "Starting Logcat: " + cmd);
+        try {
+            mLogcatProcess = (new ProcessBuilder())
+                .command(cmd.split("\\s+"))
+                .redirectErrorStream(true)
+                .start();
+        }
+        catch (Exception e) {
+            Log.e(TAG, "Failed to start Logcat process.", e);
+        }
+
 
         mStarted = true;
         return START_STICKY;

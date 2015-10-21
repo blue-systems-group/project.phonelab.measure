@@ -49,7 +49,6 @@ public abstract class Receiver extends BroadcastReceiver
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "Intent fired, action is " + intent.getAction());
             try {
                 triggerUpdate();
             }
